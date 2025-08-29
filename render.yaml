@@ -1,0 +1,25 @@
+services:
+  - type: web
+    name: n8n
+    env: docker
+    plan: free
+    autoDeploy: true
+    disk:
+      name: n8n-data
+      mountPath: /data
+      sizeGB: 1
+    envVars:
+      - key: N8N_HOST
+        value: 0.0.0.0
+      - key: WEBHOOK_URL
+        sync: false
+      - key: N8N_EDITOR_BASE_URL
+        sync: false
+      - key: N8N_ENCRYPTION_KEY
+        generateValue: true
+      - key: GENERIC_TIMEZONE
+        value: Europe/Paris
+      - key: N8N_DIAGNOSTICS_ENABLED
+        value: "false"
+      - key: N8N_DISABLE_PRODUCTION_MAIN_PROCESS
+        value: "true"
