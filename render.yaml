@@ -9,11 +9,13 @@ services:
     plan: free
     autoDeploy: true
     healthCheckPath: /healthz
-    startCommand: n8n start --port $PORT
+    startCommand: sh -c 'echo "Starting n8n on port $PORT" && n8n start --port $PORT --host 0.0.0.0'
     envVars:
       # Bind on all interfaces (container) and set external host via UI
       - key: N8N_LISTEN_ADDRESS
         value: 0.0.0.0
+      - key: N8N_PORT
+        value: $PORT
       - key: N8N_HOST
         sync: false
       - key: N8N_PROTOCOL
