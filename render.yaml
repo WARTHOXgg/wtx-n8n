@@ -8,11 +8,13 @@ services:
     env: docker
     plan: free
     autoDeploy: true
-    startCommand: sh -c 'N8N_PORT=$PORT n8n start'
+    startCommand: n8n start --port $PORT
     envVars:
-      # Bind to all interfaces so Render can reach the container
-      - key: N8N_HOST
+      # Bind on all interfaces (container) and set external host via UI
+      - key: N8N_LISTEN_ADDRESS
         value: 0.0.0.0
+      - key: N8N_HOST
+        sync: false
       - key: N8N_PROTOCOL
         value: https
       - key: N8N_ENCRYPTION_KEY
