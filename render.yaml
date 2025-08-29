@@ -10,9 +10,9 @@ services:
     autoDeploy: true
     startCommand: sh -c 'N8N_PORT=$PORT n8n start'
     envVars:
-      # Set these three in Render UI once you know the public URL
+      # Bind to all interfaces so Render can reach the container
       - key: N8N_HOST
-        sync: false
+        value: 0.0.0.0
       - key: N8N_PROTOCOL
         value: https
       - key: N8N_ENCRYPTION_KEY
