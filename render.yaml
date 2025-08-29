@@ -8,6 +8,7 @@ services:
     env: docker
     plan: free
     autoDeploy: true
+    healthCheckPath: /healthz
     startCommand: n8n start --port $PORT
     envVars:
       # Bind on all interfaces (container) and set external host via UI
