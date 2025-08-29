@@ -1,25 +1,17 @@
-databases:
-  - name: n8n-db
-    plan: free
-
 services:
   - type: web
     name: n8n
-    env: docker
     plan: free
-    autoDeploy: true
-    healthCheckPath: /healthz
-    startCommand: sh -c 'echo "Starting n8n on port $PORT" && n8n start --port $PORT --host 0.0.0.0'
+    runtime: image
+    image:
+      url: docker.io/n8nio/n8n:latest
     envVars:
-      # Bind on all interfaces (container) and set external host via UI
-      - key: N8N_LISTEN_ADDRESS
-        value: 0.0.0.0
-      - key: N8N_PORT
-        value: $PORT
-      - key: N8N_HOST
+      - key: PORT
+        value: 5678
+      - key: WEBHOOK_URL
         sync: false
-      - key: N8N_PROTOCOL
-        value: https
+      - key: N8N_EDITOR_BASE_URL
+        sync: false
       - key: N8N_ENCRYPTION_KEY
         generateValue: true
       - key: GENERIC_TIMEZONE
@@ -32,33 +24,32 @@ services:
         value: "true"
       - key: N8N_RUNNERS_ENABLED
         value: "true"
-      # Public URL variables to be set after first deploy (or via Render UI)
-      - key: WEBHOOK_URL
-        sync: false
-      - key: N8N_EDITOR_BASE_URL
-        sync: false
-      # Use Render PostgreSQL (Free) instead of a disk
-      - key: N8N_DATABASE_TYPE
+      # Database configuration for Render Postgres
+      - key: DB_TYPE
         value: postgresdb
-      - key: N8N_DATABASE_POSTGRESDB_HOST
+      - key: DB_POSTGRESDB_HOST
         fromDatabase:
           name: n8n-db
           property: host
-      - key: N8N_DATABASE_POSTGRESDB_PORT
+      - key: DB_POSTGRESDB_PORT
         fromDatabase:
           name: n8n-db
           property: port
-      - key: N8N_DATABASE_POSTGRESDB_USER
+      - key: DB_POSTGRESDB_USER
         fromDatabase:
           name: n8n-db
           property: user
-      - key: N8N_DATABASE_POSTGRESDB_PASSWORD
+      - key: DB_POSTGRESDB_PASSWORD
         fromDatabase:
           name: n8n-db
           property: password
-      - key: N8N_DATABASE_POSTGRESDB_DATABASE
+      - key: DB_POSTGRESDB_DATABASE
         fromDatabase:
           name: n8n-db
           property: database
-      - key: N8N_DATABASE_POSTGRESDB_SSL
+      - key: DB_POSTGRESDB_SSL
         value: "true"
+
+databases:
+  - name: n8n-db
+    plan: free
