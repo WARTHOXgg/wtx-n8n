@@ -1,20 +1,16 @@
+databases:
+  - name: n8n-db
+    plan: free
+
 services:
   - type: web
     name: n8n
     env: docker
     plan: free
     autoDeploy: true
-    disk:
-      name: n8n-data
-      mountPath: /data
-      sizeGB: 1
     envVars:
       - key: N8N_HOST
         value: 0.0.0.0
-      - key: WEBHOOK_URL
-        sync: false
-      - key: N8N_EDITOR_BASE_URL
-        sync: false
       - key: N8N_ENCRYPTION_KEY
         generateValue: true
       - key: GENERIC_TIMEZONE
@@ -22,4 +18,34 @@ services:
       - key: N8N_DIAGNOSTICS_ENABLED
         value: "false"
       - key: N8N_DISABLE_PRODUCTION_MAIN_PROCESS
+        value: "true"
+      # Public URL variables to be set after first deploy (or via Render UI)
+      - key: WEBHOOK_URL
+        sync: false
+      - key: N8N_EDITOR_BASE_URL
+        sync: false
+      # Use Render PostgreSQL (Free) instead of a disk
+      - key: N8N_DATABASE_TYPE
+        value: postgresdb
+      - key: N8N_DATABASE_POSTGRESDB_HOST
+        fromDatabase:
+          name: n8n-db
+          property: host
+      - key: N8N_DATABASE_POSTGRESDB_PORT
+        fromDatabase:
+          name: n8n-db
+          property: port
+      - key: N8N_DATABASE_POSTGRESDB_USER
+        fromDatabase:
+          name: n8n-db
+          property: user
+      - key: N8N_DATABASE_POSTGRESDB_PASSWORD
+        fromDatabase:
+          name: n8n-db
+          property: password
+      - key: N8N_DATABASE_POSTGRESDB_DATABASE
+        fromDatabase:
+          name: n8n-db
+          property: database
+      - key: N8N_DATABASE_POSTGRESDB_SSL
         value: "true"
